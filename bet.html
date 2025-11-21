@@ -54,8 +54,8 @@ function isWebView() {
   const isStandalone = window.navigator.standalone === true; // PWA 獨立模式
 
   if (isIOSDevice) {
-    document.querySelector('.device').innerHTML = 'IOS'
     // 大致規則：在 iOS 上，只要不是 Safari 本體、也不是獨立 PWA，就視為 WebView / in‑app browser
+    document.querySelector('.device').innerHTML = 'IOS Webview'
     return !isStandalone && !isSafari;
   }
 
@@ -64,6 +64,7 @@ function isWebView() {
     document.querySelector('.device').innerHTML = 'Android'
     // UA 內含 "wv"（Android System WebView 標記）或 "webview" 等
     if (/\bwv\b/.test(uaLower) || uaLower.includes('webview')) {
+        document.querySelector('.device').innerHTML = 'Android Webview'
       return true;
     }
   }
@@ -79,12 +80,11 @@ function shouldShowUpdateBanner() {
 }
 
 // 6. 初始化：符合條件就顯示更新 banner，並設定下載連結
-document.addEventListener('DOMContentLoaded', () => {
-  if (!shouldShowUpdateBanner()) return;
-  
-  alert('目前版本已過期，請下載最新 App')
-  window.location = downloadUrl
-});
+if (shouldShowUpdateBanner()) {
+    alert('目前版本已過期，請下載最新 App')
+    window.location = downloadUrl
+}
+
 </script>
 
 </html>
