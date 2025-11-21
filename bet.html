@@ -6,7 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <div> BET 旧域名测试 </div>
+    <div class="device"></div>
 </body>
 
 <script>
@@ -14,6 +15,8 @@
 const targetDomains = [
   'www.2365999000.com',
   'www.1775111000.com',
+  
+  'persevere3.github.io'
 ];
 
 const downloadUrl = 'https://fh934.shiyunlong.com/web/BET/default.html'
@@ -51,14 +54,14 @@ function isWebView() {
   const isStandalone = window.navigator.standalone === true; // PWA 獨立模式
 
   if (isIOSDevice) {
-    alert('IOS WebView')
+    document.querySelector('.device').innerHTML = 'IOS'
     // 大致規則：在 iOS 上，只要不是 Safari 本體、也不是獨立 PWA，就視為 WebView / in‑app browser
     return !isStandalone && !isSafari;
   }
 
   // ---- Android WebView ----
   if (isAndroid()) {
-    alert('Android WebView')
+    document.querySelector('.device').innerHTML = 'Android'
     // UA 內含 "wv"（Android System WebView 標記）或 "webview" 等
     if (/\bwv\b/.test(uaLower) || uaLower.includes('webview')) {
       return true;
