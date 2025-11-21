@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+
+<script>
+// 1. 要判斷的域名清單
+const targetDomains = [
+  'www.2365999000.com',
+  'www.1775111000.com',
+];
+
+const downloadUrl = 'https://fh934.shiyunlong.com/web/BET/default.html'
+
+// 2. 簡單的域名判斷
+function isInTargetDomains() {
+  const host = window.location.hostname.toLowerCase();
+  return targetDomains.some(d => d.toLowerCase() === host);
+}
+
+// 3. 判斷平台
+function isAndroid() {
+  const ua = navigator.userAgent || '';
+  return /android/i.test(ua);
+}
+
+function isIOS() {
+  const ua = navigator.userAgent || '';
+  return /iphone|ipad|ipod/i.test(ua);
+}
+
+// 4. 判斷是否為 WebView（只擋 Android / iOS WebView，行動瀏覽器不擋）
+function isWebView() {
+  if (typeof window === 'undefined') return false;
+
+  const ua = navigator.userAgent || '';
+  const uaLower = ua.toLowerCase();
+
+  // ---- iOS WebView ----
+  const isIOSDevice = isIOS();
+  const isSafari = isIOSDevice &&
+    /safari/i.test(ua) &&
+    !/crios|fxios|opios/i.test(ua); // 排除 iOS Chrome / Firefox / Opera
+
+  const isStandalone = window.navigator.standalone === true; // PWA 獨立模式
+
+  if (isIOSDevice) {
+    alert('IOS WebView')
+    // 大致規則：在 iOS 上，只要不是 Safari 本體、也不是獨立 PWA，就視為 WebView / in‑app browser
+    return !isStandalone && !isSafari;
+  }
+
+  // ---- Android WebView ----
+  if (isAndroid()) {
+    alert('Android WebView')
+    // UA 內含 "wv"（Android System WebView 標記）或 "webview" 等
+    if (/\bwv\b/.test(uaLower) || uaLower.includes('webview')) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// 5. 最終條件：
+//    - 網域在指定陣列中
+//    - 且在 Android / iOS WebView 中開啟（含 App 內嵌 WebView、in‑app browser）
+function shouldShowUpdateBanner() {
+  return isInTargetDomains() && isWebView();
+}
+
+// 6. 初始化：符合條件就顯示更新 banner，並設定下載連結
+document.addEventListener('DOMContentLoaded', () => {
+  if (!shouldShowUpdateBanner()) return;
+  
+  alert('目前版本已過期，請下載最新 App')
+  window.location = downloadUrl
+});
+</script>
+
+</html>
